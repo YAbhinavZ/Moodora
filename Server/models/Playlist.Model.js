@@ -50,4 +50,4 @@ const playlistSchema = new mongoose.Schema(
   { timestamps: true } // adds createdAt + updatedAt
 );
 
-export const Playlist  = Schema.model("Playlist",playlistSchema);
+export const Playlist  = mongoose.model("Playlist",playlistSchema);

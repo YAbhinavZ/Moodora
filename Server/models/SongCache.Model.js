@@ -30,4 +30,4 @@ const songCacheSchema = new mongoose.Schema({
   },
 });
  
-export const songCache = Schema.Model("SongCache",songCacheSchema);
+export const songCache = mongoose.Model("SongCache",songCacheSchema);
