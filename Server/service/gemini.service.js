@@ -1,10 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-// ─── Analyse mood + generate songs in one prompt ──────────────────────────
-// Returns: { moodLabel, energy, songs: [{ title, artist, reason }] }
+import axios from "axios";
 
 const getMoodAndSongs = async (moodText) => {
   const prompt = `
@@ -26,12 +20,15 @@ const getMoodAndSongs = async (moodText) => {
     Generate exactly 8 songs that match the mood. Only return the JSON, nothing else.
   `;
 
-  const result = await model.generateContent(prompt);
-  const text = result.response.text();
+  const response = await axios.post(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+    {
+      contents: [{ parts: [{ text: prompt }] }],
+    }
+  );
 
-  // Gemini sometimes wraps the JSON in markdown code blocks, strip them
+  const text = response.data.candidates[0].content.parts[0].text;
   const cleaned = text.replace(/```json|```/g, "").trim();
-
   const parsed = JSON.parse(cleaned);
 
   return parsed;
