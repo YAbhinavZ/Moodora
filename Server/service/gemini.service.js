@@ -20,18 +20,24 @@ const getMoodAndSongs = async (moodText) => {
     Generate exactly 8 songs that match the mood. Only return the JSON, nothing else.
   `;
 
-  const response = await axios.post(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-    {
-      contents: [{ parts: [{ text: prompt }] }],
-    }
-  );
+  try {
+    const response = await axios.post(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+        
+        {
+            contents: [{ parts: [{ text: prompt }] }],
+        }
+    );
 
-  const text = response.data.candidates[0].content.parts[0].text;
-  const cleaned = text.replace(/```json|```/g, "").trim();
-  const parsed = JSON.parse(cleaned);
+    const text = response.data.candidates[0].content.parts[0].text;
+    const cleaned = text.replace(/```json|```/g, "").trim();
+    return JSON.parse(cleaned);
 
-  return parsed;
+} catch (err) {
+    console.log("STATUS:", err.response?.status);
+    console.log("DATA:", JSON.stringify(err.response?.data, null, 2));
+    throw err;
+}
 };
 
 export default getMoodAndSongs;
