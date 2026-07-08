@@ -8,7 +8,7 @@ const searchYouTube = async (title, artist) => {
   const query = `${title} ${artist} official audio`.toLowerCase().trim();
 
   // 1. Check cache first
-  const cached = await SongCache.findOne({ query });
+  const cached = await songCache.findOne({ query });
   if (cached) {
     return { videoId: cached.videoId, thumbnail: cached.thumbnail };
   }
@@ -37,7 +37,7 @@ const searchYouTube = async (title, artist) => {
   const thumbnail = video.snippet.thumbnails.high.url;
 
   // 3. Save to cache so we don't call YouTube again for this song
-  await SongCache.create({ query, videoId, thumbnail });
+  await songCache.create({ query, videoId, thumbnail });
 
   return { videoId, thumbnail };
 };
