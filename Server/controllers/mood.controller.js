@@ -7,6 +7,7 @@ import fetchVideoIds from "../service/youtube.service.js";
 // protected: yes (requires JWT)
 
 export const analyseMood = async (req, res) => {
+  console.log("Mood endpoint called");
   try {
     const { text } = req.body;
 
